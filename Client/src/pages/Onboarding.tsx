@@ -80,7 +80,7 @@ const Onboarding = () => {
             <div className="w-10 h-10 rounded-lg bg-emerald-500 flex items-center justify-center">
               <PersonStandingIcon className='w-6 h-6 text-white' />
             </div>
-            <h1 className='text-2xl font-bold text-slate-800 dark:text-white'>AuraFit</h1>
+            <h1 className='text-2xl font-bold text-slate-800 dark:text-white'>FitNext</h1>
           </div>
           <p className='text-slate-500 dark:text-slate-400 mt-4'>Let's Personalize your experience</p>
         </div>
