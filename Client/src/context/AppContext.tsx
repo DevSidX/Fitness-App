@@ -29,8 +29,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         } catch (error: any) {
             console.log(error);
-            throw error
-            toast.error(error?.response?.data.error?.message || error.message)
+            const message = error?.response?.data?.error?.message || error.message || "Something went wrong";
+            toast.error(message);
+            return;
         }
     }
 
@@ -48,11 +49,17 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             }
             localStorage.setItem('token', data.jwt)
             api.defaults.headers.common['Authorization'] = `Bearer ${data.jwt}`//
+            toast.success("Login successful")
 
         } catch (error: any) {
             console.log(error);
-            throw error
-            toast.error(error?.response?.data.error?.message || error.message)
+            const backendMessage = error?.response?.data?.error?.message;
+            if (backendMessage === "Invalid identifier or password") {
+                toast.error("User not registered. Please sign up first.");
+            } else {
+                toast.error(backendMessage || "Login failed");
+            }
+            return;
         }
     }
 
@@ -61,7 +68,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             const { data } = await api.get('/api/users/me', {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            setUser({...data, token})
+            setUser({ ...data, token })
 
             if (data?.age && data?.weight && data?.goal) {
                 setOnboardingCompleted(true)
@@ -70,11 +77,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
         } catch (error: any) {
             console.log(error);
-            throw error
-            toast.error(error?.response?.data.error?.message || error.message)
+            const message = error?.response?.data?.error?.message || error.message || "Session expired. Please login again";
+            toast.error(message);
+            localStorage.removeItem('token')
+            setUser(null)
+        } finally {
+            setIsUserFetched(true)
         }
-        setIsUserFetched(true) // setUserfetched => setIsUserFetched
-
     }
 
     const fetchFoodLogs = async (token: string) => {
@@ -85,8 +94,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             setAllFoodLogs(data)
         } catch (error: any) {
             console.log(error);
-            throw error
-            toast.error(error?.response?.data.error?.message || error.message)
+            const message = error?.response?.data?.error?.message || error.message || "Something went wrong";
+            toast.error(message);
+            return;
         }
     }
 
@@ -98,8 +108,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             setAllActivityLogs(data)
         } catch (error: any) {
             console.log(error);
-            throw error
-            toast.error(error?.response?.data.error?.message || error.message)
+            const message = error?.response?.data?.error?.message || error.message || "Something went wrong";
+            toast.error(message);
+            return;
         }
     }
 
@@ -107,8 +118,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.removeItem('token')
         setUser(null)
         setOnboardingCompleted(false)
-        api.defaults.headers.common['Authorization'] = ''
+        delete api.defaults.headers.common['Authorization']
         navigate(`/`)
+        toast.success('Logged out successfully')
     }
 
     //fetch the user when the token is available
@@ -116,10 +128,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         const token = localStorage.getItem('token')
         if (token) {
             (async () => {
+                api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
                 await fetchUser(token)
                 await fetchFoodLogs(token)
                 await fetchActivityLogs(token)
             })()
+        } else {
+            setIsUserFetched(true) // user fetching is finished
         }
     }, [])
 
