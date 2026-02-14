@@ -10,8 +10,8 @@ export const dummyUser: UserData & { id: string; email: string; username: string
     weight: 75,
     height: 175,
     goal: "maintain",
-    dailyCalorieIntake: 2200,
-    dailyCalorieBurn: 400,
+    dailyCaloriesIntake: 2200,
+    dailyCaloriesBurned: 400,
     createdAt: new Date().toISOString(),
 };
 
