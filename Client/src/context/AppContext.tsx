@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { initialState, type ActivityEntry, type Credentials, type FoodEntry, type User } from "../types";
 import { useNavigate } from "react-router-dom";
-// import mockApi from "../assets/mockApi";
 import api from "../config/api";
 import toast from "react-hot-toast";
 
