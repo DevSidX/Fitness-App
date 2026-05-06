@@ -77,7 +77,7 @@ export type AppContextType = {
     setUser: React.Dispatch<React.SetStateAction<User>>;
     login: (credentials: Credentials) => Promise<void>;
     signup: (credentials: Credentials) => Promise<void>;
-    fetchUser: (token: string) => Promise<void>;
+    fetchUser: (token: string) => Promise<boolean>;
     isUserFetched: boolean;
     logout: () => void;
     onboardingCompleted: boolean;
@@ -93,7 +93,7 @@ export const initialState: AppContextType = {
     setUser: () => {},
     login: async () => {},
     signup: async () => {},
-    fetchUser: async () => {},
+    fetchUser: async () => false,
     isUserFetched: false,
     logout: () => {},
     onboardingCompleted: false,

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { initialState, type ActivityEntry, type Credentials, type FoodEntry, type User } from "../types";
+import { initialState, type ActivityEntry, type Credentials, type FoodEntry, type User } from "../types/index";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api";
 import toast from "react-hot-toast";
@@ -62,28 +62,32 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const fetchUser = async (token: string) => {
-        try {
-            const { data } = await api.get('/api/users/me', {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            setUser({ ...data, token })
+    const fetchUser = async (token: string): Promise<boolean> => {
+    try {
+        const { data } = await api.get('/api/users/me', {
+            headers: { Authorization: `Bearer ${token}` }
+        })
 
-            if (data?.age && data?.weight && data?.goal) {
-                setOnboardingCompleted(true)
-            }
-            api.defaults.headers.common['Authorization'] = `Bearer ${token}`//
+        setUser({ ...data, token })
 
-        } catch (error: any) {
-            console.log(error);
-            const message = error?.response?.data?.error?.message || error.message || "Session expired. Please login again";
-            toast.error(message);
-            localStorage.removeItem('token')
-            setUser(null)
-        } finally {
-            setIsUserFetched(true)
+        if (data?.age && data?.weight && data?.goal) {
+            setOnboardingCompleted(true)
         }
+
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+        return true
+    } catch (error: any) {
+        console.log(error)
+
+        localStorage.removeItem('token')
+        setUser(null)
+
+        return false
+    } finally {
+        setIsUserFetched(true)
     }
+}
 
     const fetchFoodLogs = async (token: string) => {
         try {
@@ -129,9 +133,15 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             (async () => {
                 api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
-                await fetchUser(token)
-                await fetchFoodLogs(token)
-                await fetchActivityLogs(token)
+                const userFetched = await fetchUser(token)
+
+                if (userFetched) {
+                await Promise.all([
+                    fetchFoodLogs(token),
+                    fetchActivityLogs(token)
+                ])
+            }
+            setIsUserFetched(true)
             })()
         } else {
             setIsUserFetched(true) // user fetching is finished
