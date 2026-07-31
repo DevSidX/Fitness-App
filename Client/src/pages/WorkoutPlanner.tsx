@@ -6,7 +6,7 @@ import WeeklyTips from "../components/WeeklyTips";
 import WorkoutSkeleton from "../components/WorkoutSkeleton";
 import type { WorkoutFormData, WorkoutPlan } from "../types/workout";
 import { DumbbellIcon } from "lucide-react";
-
+import api from "../config/api";
 
 const WorkoutPlanner = () => {
     const [loading, setLoading] = useState(false);
@@ -23,18 +23,10 @@ const WorkoutPlanner = () => {
 
             setWorkoutRequest(formData);
 
-            const response = await fetch(
-                "http://localhost:1337/api/workout-planner",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                }
+            const { data } = await api.post(
+                "/api/workout-planner",
+                formData
             );
-
-            const data = await response.json();
 
             setWorkoutPlan(data);
         } catch (error) {
@@ -50,21 +42,13 @@ const WorkoutPlanner = () => {
         setRegeneratingDay(day);
 
         try {
-            const response = await fetch(
-                "http://localhost:1337/api/workout-planner/regenerate",
+            const { data } = await api.post(
+                "/api/workout-planner/regenerate",
                 {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        ...workoutRequest,
-                        day,
-                    }),
+                    ...workoutRequest,
+                    day,
                 }
             );
-
-            const updatedDay = await response.json();
 
             setWorkoutPlan((prev) => {
                 if (!prev) return prev;
@@ -72,7 +56,7 @@ const WorkoutPlanner = () => {
                 return {
                     ...prev,
                     days: prev.days.map((d) =>
-                        d.day === updatedDay.day ? updatedDay : d
+                        d.day === data.day ? data : d
                     ),
                 };
             });
