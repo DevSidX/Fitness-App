@@ -1,4 +1,4 @@
-import { RotateCcwIcon, Clock3Icon, TimerResetIcon } from "lucide-react";
+import { Clock3Icon, TimerResetIcon } from "lucide-react";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import type { WorkoutDay } from "../types/workout";
