@@ -1,4 +1,4 @@
-import { Home, Utensils, Activity, User } from "lucide-react"
+import { Home, Utensils, Activity, User, Dumbbell } from "lucide-react"
 import { NavLink } from "react-router-dom"
 
 const BottomNav = () => {
@@ -18,6 +18,11 @@ const BottomNav = () => {
             path: '/activity',
             label: 'Activity',
             icon: Activity
+        },
+        {
+            path: '/workout-planner', // use your actual route
+            label: 'Workout',
+            icon: Dumbbell
         },
         {
             path: '/profile',

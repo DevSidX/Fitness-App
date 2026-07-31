@@ -1,4 +1,4 @@
-import { ActivityIcon, HomeIcon, MoonIcon, PersonStandingIcon, SunIcon, User, UtensilsIcon } from "lucide-react"
+import { ActivityIcon, HomeIcon, MoonIcon, PersonStandingIcon, SunIcon, User, UtensilsIcon, Dumbbell } from "lucide-react"
 import { useTheme } from "../context/ThemeContextApi"
 import { NavLink } from "react-router-dom"
 
@@ -21,10 +21,15 @@ const Sidebar = () => {
             icon: ActivityIcon
         },
         {
+            path: '/workout-planner',
+            label: 'Workout Planner',
+            icon: Dumbbell
+        },
+        {
             path: '/profile',
             label: 'Profile',
             icon: User
-        },
+        }
     ]
 
     const { theme, toggleTheme } = useTheme() // theme toggle

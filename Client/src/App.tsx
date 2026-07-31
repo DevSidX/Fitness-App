@@ -9,6 +9,7 @@ import Login from "./pages/Login"
 import Loading from "./components/Loading"
 import Onboarding from "./pages/Onboarding"
 import { Toaster } from "react-hot-toast"
+import WorkoutPlanner from "./pages/WorkoutPlanner"
 
 function App() {
   const { user, isUserFetched, onboardingCompleted } = useAppContext()
@@ -29,7 +30,9 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="food" element={<FoodLog />} />
           <Route path="activity" element={<ActivityLog />} />
+          <Route path="workout-planner" element={<WorkoutPlanner />} />
           <Route path="profile" element={<Profile />} />
+          
         </Route>
       </Routes>
     </>

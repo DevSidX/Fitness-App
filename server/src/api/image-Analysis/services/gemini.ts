@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import fs from 'fs'
 
-const ai = new GoogleGenAI({apiKey:process.env.GEMINI_API_KE});
+const ai = new GoogleGenAI({apiKey:process.env.GEMINI_API_KEY});
 
 export const analyzeImage = async (filePath: string) => {
 
